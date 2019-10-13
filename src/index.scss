@@ -1,0 +1,13 @@
+$color: #444;
+
+body{
+  color: $color;
+}
+
+#app{
+  padding: 10px;
+
+  .dashed-class{
+    text-decoration: line-through;
+  }
+}
