@@ -71,6 +71,7 @@ Optionally, we can run webpack to build bundle and simply run `http-server ./dis
 See package.json 'scripts'
 
 # babel-loader
+> This package allows transpiling JavaScript files using Babel and webpack.
 https://webpack.js.org/loaders/babel-loader/
 
 # css-loader
@@ -258,3 +259,15 @@ CommonJS module.exports / require
 EcmaScript export default / import
  -->
 
+## Deploying to Heroku
+
+### Install Heroku CLI
+curl https://cli-assets.heroku.com/install-ubuntu.sh | sh
+```
+heroku login
+heroku create
+git config --list # Heroku has been added to your remote
+
+yarn add express
+touch server.js
+```
