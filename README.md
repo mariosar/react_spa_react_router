@@ -83,6 +83,7 @@ Adds CSS to the dom by injecting style tag inside `<head></head>`
 
 # mini-css-extract-plugin
 https://webpack.js.org/plugins/mini-css-extract-plugin/
+> This plugin extracts CSS into separate files. It creates a CSS file per JS file which contains CSS. It supports On-Demand-Loading of CSS and SourceMaps.
 Moves all required css modules into a separate CSS file. Styles are no longer injected in-line. Combines all required CSS and bundles it creating a single file style.css that is injected. Cannot be used with style-loader or else will error.
 
 # clean-webpack-plugin
@@ -214,10 +215,20 @@ yarn add -D webpack-merge
 > webpack-merge provides a merge function that concatenates arrays and merges objects creating a new object.
 
 ## Minification in production
+[link](https://webpack.js.org/plugins/mini-css-extract-plugin/#minimizing-for-production)
 UglifyJS is a popular older minifier, but today the new kid on the block is terser - an actively maintained fork of Uglify-es. Webpack in production mode minifies using terser by default.
 Why minify?
 Convert your code into a smaller form that takes up less bytes and loads faster on the browser.
 When does a browser know to use the cached version and when to request a new version?
+
+```
+yarn add -D terser-webpack-plugin optimize-css-assets-webpack-plugin
+```
+For documentation
+terser-webpack-plugin
+[link](https://www.npmjs.com/package/terser-webpack-plugin)
+optimize-css-assets-webpack-plugin
+[link](https://github.com/NMFR/optimize-css-assets-webpack-plugin)
 
 In the command line:
 --optimize-minimize will include TerserPlugin behind the scenes. --define process.env.NODE_ENV="'production'" will do the same for the DefinePlugin. Using the webpack flag -p will do both. Specifying mode also configures DefinePlugin automatically.

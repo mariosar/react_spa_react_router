@@ -82,11 +82,9 @@ module.exports = env => {
               favicon: 'src/public/favicon.ico'
           }),
           new MiniCssExtractPlugin({
-            // Options similar to the same options in webpackOptions.output
-            // all options are optional
-            filename: '[name].css',
-            chunkFilename: '[id].css',
-            ignoreOrder: false, // Enable to remove warnings about conflicting order
+            filename: env.production ? '[name].[hash].css' : '[name].css',
+            chunkFilename: env.production ? '[id].[hash].css' : '[id].css',
+            ignoreOrder: false,
           }),
       ]
   }
