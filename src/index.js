@@ -6,7 +6,6 @@ import mario from './public/images/super_mario.png';
 
 class App extends React.Component{
     render(){
-        console.log(process.env.NODE_ENV)
         return(
             <div className={styles.appContainer}>
                 <div className="dashed-class">Should be line-through</div>
