@@ -227,6 +227,8 @@ See [link](https://webpack.js.org/guides/production/)
 -p shortcut for --optimize-minimize --define process.env.NODE_ENV="production"
 One important caveat: -p sets the NODE_ENV inside your application, but not inside your webpack.config.js, therefore you cannot use conditionals inside your config like process.env.NODE_ENV === 'production' because they will not work. [see](https://github.com/webpack/webpack/issues/2537)
 
+Use webpack [environment variables](https://webpack.js.org/guides/environment-variables/)
+
 # File structure guidelines
 public/ static files
 src/ files that are imported and changed
