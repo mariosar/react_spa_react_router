@@ -225,7 +225,7 @@ See [link](https://webpack.js.org/guides/production/)
 
 -d shortcut for --debug --devtool eval-cheap-module-source-map --output-pathinfo
 -p shortcut for --optimize-minimize --define process.env.NODE_ENV="production"
-One important caveat: -p sets the NODE_ENV inside your application, but not inside your webpack.config.js, therefore you cannot use conditionals inside your config like process.env.NODE_ENV === 'production' because they will not work.
+One important caveat: -p sets the NODE_ENV inside your application, but not inside your webpack.config.js, therefore you cannot use conditionals inside your config like process.env.NODE_ENV === 'production' because they will not work. [see](https://github.com/webpack/webpack/issues/2537)
 
 # File structure guidelines
 public/ static files
@@ -244,5 +244,4 @@ Modules
 CommonJS module.exports / require
 EcmaScript export default / import
  -->
-
 
