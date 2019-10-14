@@ -85,12 +85,6 @@ yarn add -D http-server
 #### style-loader
 > Adds CSS to the dom by injecting style tag inside `<head></head>` [read more](https://github.com/webpack-contrib/style-loader)
 
-#### mini-css-extract-plugin
-> This plugin extracts CSS into separate files. It creates a CSS file per JS file which contains CSS. It supports On-Demand-Loading of CSS and SourceMaps. [read more](https://webpack.js.org/plugins/mini-css-extract-plugin/)
-Moves all required css modules into a separate CSS file. Styles are no longer injected in-line (like in style-loader). 
-
-The benefit is it creates a css file that can be loaded in parallel to the javascript, so is ideal in production. **Note:** Cannot be used with style-loader or else will error.
-
 #### clean-webpack-plugin
 > By default, this plugin will remove all files inside webpack's output.path directory, as well as all unused webpack assets after every successful rebuild. [read more](https://github.com/johnagan/clean-webpack-plugin)
 
@@ -120,6 +114,7 @@ touch webpack.config.js
 # webpack.config.js
 
 var path = require('path');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 var HtmlWebpackPlugin =  require('html-webpack-plugin');
 
 module.exports = {
@@ -148,6 +143,9 @@ module.exports = {
     },
     mode:'development',
     plugins : [
+        new CleanWebpackPlugin({
+            verbose: true
+        }),
         new HtmlWebpackPlugin ({
             template : './src/public/index.html'
         })
@@ -209,14 +207,30 @@ Here are some you can add there now:
 
 Now run `yarn start:dev` and we'll have our application automatically compiled and served by our webpack-dev-server. Hurray! You'll notice, if you haven't yet run the webpack command, there is no `dist` folder. That's because webpack-dev-server does everything in memory. To see the bundle, run `yarn dev`, then to serve that bundle using http-server run `yarn start`.
 
-### Sass-Loader
+### Additional Loaders
+#### Sass-Loader
 Likely, we will be using less or sass/scss. We need to add a loader that will check the file extension and transpile into regular old css. `sass-loader` is the solution for me. [read more](https://github.com/webpack-contrib/sass-loader)
 ```
 yarn add -D sass-loader node-sass
 ```
+#### Images
+```
+yarn add -D file-loader url-loader
+```
+##### Url-Loader
+> will encode files to base64 and include them inline rather than having them loaded as separate files with another request. [read more](https://webpack.js.org/loaders/url-loader/)
 
+PRO: Ideal for very small files to decrease the number of requests made to the server fetching resources.
+CON: will increase your bundle size.
 
-### SourceMap
+For small files it totally makes sense. No need to make unnecessary requests to the server if you can just base64 inline the image instead. **NOTE:** Specify the limit in bytes to try and url-load the image, if above this threshold, it will by default fallback to file-loader.
+
+##### File-Loader
+> will copy files to the build folder and insert links to them where they are included. [read more](https://github.com/webpack-contrib/file-loader)
+
+A handy fallback to `url-loader`. It will try to base64 small images, if the image is not small enough for that, it will copy the image over to the output path and generate the correct url path so the image can be included in your app.
+
+#### SourceMap - Not a loader, but a feature of webpack we should enable in dev
 When we're running our app and need to do some debugging of styling, it helps to know where in our css and scss files the style rules are from. Source Maps are what provide that in the browser and we can enable them in webpack by adding a `devtool` property inside our webpack.config.js. [read more](https://webpack.js.org/configuration/devtool/) about devtool and source maps.
 ```
 # webpack.config.js
@@ -225,41 +239,126 @@ devtool: 'eval-source-map',
 ```
 **NOTE:** I've only gotten the source maps to show up on Chrome. Not sure why FF not listing sourceMaps correctly.
 
-### Images
+### Updated Webpack Config for Sass support, images, source maps
 ```
-yarn add -D file-loader url-loader
+# webpack.config.js
+
+var path = require('path');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+var HtmlWebpackPlugin =  require('html-webpack-plugin');
+
+module.exports = {
+    entry : './src/index.js',
+    output : {
+        path : path.resolve(__dirname , 'dist'),
+        filename: 'index_bundle.js'
+    },
+    mode:'development',
+    devtool: 'eval-source-map',
+    module : {
+        rules : [
+            {
+              test: /\.m?jsx?$/,
+              exclude: /(node_modules|bower_components)/,
+              use: {
+                loader: 'babel-loader',
+                options: {
+                  presets: ['@babel/preset-env', '@babel/preset-react']
+                }
+              }
+            },
+            // Using both Pure CSS: import './index.scss'
+            {
+              test: /\.(sa|sc|c)ss$/i,
+              exclude: /\.module\.(sa|sc|c)ss$/i,
+              use: [
+                'style-loader',
+                {
+                  loader: 'css-loader',
+                  options: {
+                    sourceMap: true,
+                  }
+                },
+                {
+                  loader: 'sass-loader',
+                },
+              ],
+            },
+            // And CSS modules: import styles from './index.module.css'
+            {
+              test: /\.module\.(sa|sc|c)ss$/i,
+              use: [
+                'style-loader',
+                {
+                  loader: 'css-loader',
+                  options: {
+                    sourceMap: true,
+                    localsConvention: 'camelCase',
+                    modules: true
+                  }
+                },
+                {
+                  loader: 'sass-loader',
+                },
+              ],
+            },
+            // File Loader & Url Loader
+            {
+              test: /\.(png|jpe?g|gif|svg|eot|ttf|woff|woff2)$/i,
+              loader: 'url-loader',
+              options: {
+                limit: 8192,
+                outputPath: 'assets'
+              },
+            },
+        ]
+    },
+    plugins : [
+        new CleanWebpackPlugin({
+            verbose: true
+        }),
+        new HtmlWebpackPlugin ({
+            template : './src/public/index.html'
+        })
+    ]
+}
 ```
-#### Url-Loader
-> will encode files to base64 and include them inline rather than having them loaded as separate files with another request. [read more](https://webpack.js.org/loaders/url-loader/)
 
-PRO: Ideal for very small files to decrease the number of requests made to the server fetching resources.
-CON: will increase your bundle size.
+## Production Build
 
-For small files it totally makes sense. No need to make unnecessary requests to the server if you can just base64 inline the image instead. **NOTE:** Specify the limit in bytes to try and url-load the image, if above this threshold, it will by default fallback to file-loader.
+Congratulations! By now you should be able to develop your application. We've setup webpack, several loaders, plugins. You should have a rudimentary understanding of webpack that hopefully will provide you with a foundation to take the next leap. One lingering question is, how to bundle for production? I personally, like to have my production setup early on so that I can continously ship code. What's the point of learning and developing locally if we can't share our creations in a production environment?
 
-#### File-Loader
-> will copy files to the build folder and insert links to them where they are included. [read more](https://github.com/webpack-contrib/file-loader)
+So there are a couple things involved in doing this. First, we need to tell webpack to bundle and transpile our code for production, that means optimizing and minifying it so our bundles load faster. It also means fingerprinting files so that the browser knows when we've made changes.
 
-## webpack-merge
+One solution is to create multiple webpack.config.js files. But there is a lot of overlapping configuration that applies to both production and development. A better solution...
+
+#### webpack-merge
+> webpack-merge provides a merge function that concatenates arrays and merges objects creating a new object. [read more](https://github.com/survivejs/webpack-merge)
+```
 yarn add -D webpack-merge
-[link](https://github.com/survivejs/webpack-merge)
-> webpack-merge provides a merge function that concatenates arrays and merges objects creating a new object.
+```
+This handy tool will merge configuration objects to create a new configuration object. Common configuration will be inside of `webpack.common.js`
 
-## Minification in production
-[link](https://webpack.js.org/plugins/mini-css-extract-plugin/#minimizing-for-production)
-UglifyJS is a popular older minifier, but today the new kid on the block is terser - an actively maintained fork of Uglify-es. Webpack in production mode minifies using terser by default.
-Why minify?
-Convert your code into a smaller form that takes up less bytes and loads faster on the browser.
-When does a browser know to use the cached version and when to request a new version?
+### Minification in production
+#### Why minify?
+To convert your code into a smaller form that takes up less bytes and loads faster on the browser.
+
+#### Tools for this job
+##### mini-css-extract-plugin
+> This plugin extracts CSS into separate files. It creates a CSS file per JS file which contains CSS. It supports On-Demand-Loading of CSS and SourceMaps. [read more](https://webpack.js.org/plugins/mini-css-extract-plugin/)
+Moves all required css modules into a separate CSS file. Styles are no longer injected in-line (like in style-loader). 
+
+The benefit is it creates a css file that can be loaded in parallel to the javascript, so is ideal in production. **Note:** Cannot be used with style-loader or else will error.
+
+#### optimize-css-assets-webpack-plugin
+> A Webpack plugin to optimize \ minimize CSS assets. [read more](https://github.com/NMFR/optimize-css-assets-webpack-plugin)
+
+#### terser-webpack-plugin
+UglifyJS is a popular older minifier, but today the new kid on the block is terser - an actively maintained fork of Uglify-es. Webpack in production mode minifies using terser by default. Including the plugin manually, you can configure it how you like. [read more](https://www.npmjs.com/package/terser-webpack-plugin)
 
 ```
-yarn add -D terser-webpack-plugin optimize-css-assets-webpack-plugin
+yarn add -D terser-webpack-plugin optimize-css-assets-webpack-plugin mini-css-extract-plugin
 ```
-For documentation
-terser-webpack-plugin
-[link](https://www.npmjs.com/package/terser-webpack-plugin)
-optimize-css-assets-webpack-plugin
-[link](https://github.com/NMFR/optimize-css-assets-webpack-plugin)
 
 In the command line:
 --optimize-minimize will include TerserPlugin behind the scenes. --define process.env.NODE_ENV="'production'" will do the same for the DefinePlugin. Using the webpack flag -p will do both. Specifying mode also configures DefinePlugin automatically.
