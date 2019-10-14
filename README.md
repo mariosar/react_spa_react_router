@@ -59,40 +59,40 @@ class App extends React.Component{
 ReactDOM.render(<App />, document.getElementById('app'))
 ```
 
-## Dev Dependencies
+# Dev Dependencies
 ```
 yarn add -D @babel/core @babel/preset-env @babel/preset-react
 yarn add -D webpack webpack-cli webpack-dev-server babel-loader css-loader style-loader html-webpack-plugin
 yarn add -D http-server
 ```
 
-# babel-loader
+### babel-loader
 > This package allows transpiling JavaScript files using Babel and webpack. [read more](https://webpack.js.org/loaders/babel-loader/)
 
-# css-loader
+### css-loader
 > Allows you to write import / require() to load css files. [read more](https://github.com/webpack-contrib/css-loader)
 
-# style-loader
+### style-loader
 > Adds CSS to the dom by injecting style tag inside `<head></head>` [read more](https://github.com/webpack-contrib/style-loader)
 
-# mini-css-extract-plugin
+### mini-css-extract-plugin
 > This plugin extracts CSS into separate files. It creates a CSS file per JS file which contains CSS. It supports On-Demand-Loading of CSS and SourceMaps. [read more](https://webpack.js.org/plugins/mini-css-extract-plugin/)
 Moves all required css modules into a separate CSS file. Styles are no longer injected in-line (like in style-loader). 
 
 The benefit is it creates a css file that can be loaded in parallel to the javascript, so is ideal in production. **Note:** Cannot be used with style-loader or else will error.
 
-# clean-webpack-plugin
+### clean-webpack-plugin
 https://github.com/johnagan/clean-webpack-plugin
 > By default, this plugin will remove all files inside webpack's output.path directory, as well as all unused webpack assets after every successful rebuild.
 
-# html-webpack-plugin
+### html-webpack-plugin
 https://github.com/jantimon/html-webpack-plugin
 > This is a webpack plugin that simplifies creation of HTML files to serve your webpack bundles. Useful for webpack bundles that contain hash that changes every compilation. Plugin will generate html file for you and inject bundled js file.
 ***Can also specify favicon here***
 
 App vs Dev vs Peer vs Optional Dependencies
 
-## webpack-dev-server
+### webpack-dev-server
 https://github.com/webpack/webpack-dev-server
 > Use webpack with a development server that provides live reloading.
 # Run in memory so you won't see the 'dist' folder with the bundle. To see the files in development run 'webpack' command.
@@ -104,7 +104,7 @@ It is a development server with webpack that will launch your application on the
 Optionally, we can run webpack to build bundle and simply run `http-server ./dist`
 See package.json 'scripts'
 
-## Webpack
+### Webpack
 # https://github.com/webpack/webpack
 > webpack is a module bundler. Its main purpose is to bundle JavaScript files for usage in a browser, yet it is also capable of transforming, bundling, or packaging just about any resource or asset
 > Webpack is a module bundler.
