@@ -570,7 +570,7 @@ Follow these basic commands and they should be enough to have your app up and ru
 ```
 curl https://cli-assets.heroku.com/install-ubuntu.sh | sh
 ```
-##### Create Heroku application, commit your rcode to heroku
+##### Create Heroku application and commit your code to heroku repository
 ```
 heroku login
 heroku create
