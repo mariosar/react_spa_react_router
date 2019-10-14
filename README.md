@@ -14,7 +14,6 @@ Initialize our repository, but first create a .gitignore:
 ```
 touch .gitignore
 ```
-
 ```
 # .gitignore
 node_modules
@@ -26,7 +25,8 @@ dist
 ## Hello World Example
 ```
 mkdir -p src/public && touch src/index.js src/index.css src/public/index.html
-
+```
+```
 # index.html
 
 <!DOCTYPE html>
@@ -66,12 +66,6 @@ yarn add -D webpack webpack-cli webpack-dev-server babel-loader css-loader style
 yarn add -D http-server
 ```
 
-# http-server
-> `http-server` is a simple, zero-configuration command-line http server. It is powerful enough for production usage, but it's simple and hackable enough to be used for testing, local development, and learning.
-
-Optionally, we can run webpack to build bundle and simply run `http-server ./dist`
-See package.json 'scripts'
-
 # babel-loader
 > This package allows transpiling JavaScript files using Babel and webpack.
 https://webpack.js.org/loaders/babel-loader/
@@ -105,6 +99,12 @@ https://github.com/webpack/webpack-dev-server
 > Use webpack with a development server that provides live reloading.
 # Run in memory so you won't see the 'dist' folder with the bundle. To see the files in development run 'webpack' command.
 It is a development server with webpack that will launch your application on the browser. It will refresh the browser window whenever you change a file.
+
+### http-server
+> `http-server` is a simple, zero-configuration command-line http server. It is powerful enough for production usage, but it's simple and hackable enough to be used for testing, local development, and learning. [read more](https://www.npmjs.com/package/http-server)
+
+Optionally, we can run webpack to build bundle and simply run `http-server ./dist`
+See package.json 'scripts'
 
 ## Webpack
 # https://github.com/webpack/webpack
