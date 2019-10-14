@@ -67,21 +67,19 @@ yarn add -D http-server
 ```
 
 # babel-loader
-> This package allows transpiling JavaScript files using Babel and webpack.
-https://webpack.js.org/loaders/babel-loader/
+> This package allows transpiling JavaScript files using Babel and webpack. [read more](https://webpack.js.org/loaders/babel-loader/)
 
 # css-loader
-https://github.com/webpack-contrib/css-loader
-Allows you to write import / require() to load css files.
+> Allows you to write import / require() to load css files. [read more](https://github.com/webpack-contrib/css-loader)
 
 # style-loader
-https://github.com/webpack-contrib/style-loader
-Adds CSS to the dom by injecting style tag inside `<head></head>`
+> Adds CSS to the dom by injecting style tag inside `<head></head>` [read more](https://github.com/webpack-contrib/style-loader)
 
 # mini-css-extract-plugin
-https://webpack.js.org/plugins/mini-css-extract-plugin/
-> This plugin extracts CSS into separate files. It creates a CSS file per JS file which contains CSS. It supports On-Demand-Loading of CSS and SourceMaps.
-Moves all required css modules into a separate CSS file. Styles are no longer injected in-line. Combines all required CSS and bundles it creating a single file style.css that is injected. Cannot be used with style-loader or else will error.
+> This plugin extracts CSS into separate files. It creates a CSS file per JS file which contains CSS. It supports On-Demand-Loading of CSS and SourceMaps. [read more](https://webpack.js.org/plugins/mini-css-extract-plugin/)
+Moves all required css modules into a separate CSS file. Styles are no longer injected in-line (like in style-loader). 
+
+The benefit is it creates a css file that can be loaded in parallel to the javascript, so is ideal in production. **Note:** Cannot be used with style-loader or else will error.
 
 # clean-webpack-plugin
 https://github.com/johnagan/clean-webpack-plugin
