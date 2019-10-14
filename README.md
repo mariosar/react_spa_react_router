@@ -82,20 +82,15 @@ Moves all required css modules into a separate CSS file. Styles are no longer in
 The benefit is it creates a css file that can be loaded in parallel to the javascript, so is ideal in production. **Note:** Cannot be used with style-loader or else will error.
 
 ### clean-webpack-plugin
-https://github.com/johnagan/clean-webpack-plugin
-> By default, this plugin will remove all files inside webpack's output.path directory, as well as all unused webpack assets after every successful rebuild.
+> By default, this plugin will remove all files inside webpack's output.path directory, as well as all unused webpack assets after every successful rebuild. [read more](https://github.com/johnagan/clean-webpack-plugin)
 
 ### html-webpack-plugin
-https://github.com/jantimon/html-webpack-plugin
-> This is a webpack plugin that simplifies creation of HTML files to serve your webpack bundles. Useful for webpack bundles that contain hash that changes every compilation. Plugin will generate html file for you and inject bundled js file.
-***Can also specify favicon here***
-
-App vs Dev vs Peer vs Optional Dependencies
+> This is a webpack plugin that simplifies creation of HTML files to serve your webpack bundles. Useful for webpack bundles that contain hash that changes every compilation. Plugin will generate html file for you and inject bundled js file. [read more](https://github.com/jantimon/html-webpack-plugin)
 
 ### webpack-dev-server
-https://github.com/webpack/webpack-dev-server
-> Use webpack with a development server that provides live reloading.
-# Run in memory so you won't see the 'dist' folder with the bundle. To see the files in development run 'webpack' command.
+> Use webpack with a development server that provides live reloading (for development). [read more](https://github.com/webpack/webpack-dev-server)
+
+Run in memory so you won't see the 'dist' folder with the bundle. To see the files in development run 'webpack' command.
 It is a development server with webpack that will launch your application on the browser. It will refresh the browser window whenever you change a file.
 
 ### http-server
@@ -105,9 +100,11 @@ Optionally, we can run webpack to build bundle and simply run `http-server ./dis
 See package.json 'scripts'
 
 ### Webpack
-# https://github.com/webpack/webpack
-> webpack is a module bundler. Its main purpose is to bundle JavaScript files for usage in a browser, yet it is also capable of transforming, bundling, or packaging just about any resource or asset
-> Webpack is a module bundler.
+> webpack is a module bundler. Its main purpose is to bundle JavaScript files for usage in a browser, yet it is also capable of transforming, bundling, or packaging just about any resource or asset [read more](https://github.com/webpack/webpack)
+
+```
+touch webpack.config.js
+```
 
 ```
 # webpack.config.js
@@ -271,3 +268,4 @@ git config --list # Heroku has been added to your remote
 yarn add express
 touch server.js
 ```
+App vs Dev vs Peer vs Optional Dependencies
