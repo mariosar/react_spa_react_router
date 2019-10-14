@@ -527,3 +527,28 @@ module.exports = env => {
   }, 
 }
 ```
+Let's add `express` as our production server:
+```
+yarn add express
+```
+```
+# server.js
+
+const express = require('express');
+const path = require('path');
+const port = process.env.PORT || 8080;
+const app = express();
+
+// the __dirname is the current directory from where the script is running
+app.use(express.static(__dirname + '/dist'));
+
+// send the user to index html page inspite of the url
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, 'index.html'));
+});
+
+app.listen(port);
+```
+
+## Summary
+We've used webpack with several loaders and plugins. We've shown you how to write the webpack config file needed to inform webpack how to transpile and bundle. We've shown you how to use webpack environment variables for conditionals inside of webpack config files. We've discussed how to make a production build of our application. I hope you've enjoyed this basic tutorial and this code is useful to you. Thank you.
