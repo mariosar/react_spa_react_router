@@ -5,7 +5,7 @@ A React app created without create-react-app that will be used to communicate wi
 ## Steps to reproduce project
 
 ```
-mkdir react_app_example && cd react_app_example
+mkdir react_app_example && cd $_
 yarn init -y
 yarn add react react-dom
 ```
@@ -13,7 +13,9 @@ yarn add react react-dom
 Initialize our repository, but first create a .gitignore:
 ```
 touch .gitignore
+```
 
+```
 # .gitignore
 node_modules
 
