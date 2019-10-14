@@ -73,7 +73,7 @@ yarn add -D webpack webpack-cli webpack-dev-server babel-loader css-loader style
 yarn add -D http-server
 ```
 
-### Webpack
+#### Webpack
 > webpack is a module bundler. Its main purpose is to bundle JavaScript files for usage in a browser, yet it is also capable of transforming, bundling, or packaging just about any resource or asset [read more](https://github.com/webpack/webpack)
 
 #### babel-loader
@@ -109,7 +109,7 @@ This is our development server. It runs in memory so you won't see the `dist` fo
 #### http-server
 > `http-server` is a simple, zero-configuration command-line http server. It is powerful enough for production usage, but it's simple and hackable enough to be used for testing, local development, and learning. [read more](https://www.npmjs.com/package/http-server)
 
-Optionally, we can run `webpack` to build our application and simply run `http-server ./dist`. We may want to run our production build and test it out on our location machine before deployment. http-server is a ready to use tool for that.
+Optionally, we can run `webpack` to build our application and simply run `http-server ./dist`. We may want to run our production build and test it out on our local machine before deployment. http-server is a ready to use tool for that.
 
 ### Next Steps
 Webpack needs to be told what to do, so we'll create a webpack.config.js file. It does nothing more than export a JS object with some configuration for webpack.
@@ -141,8 +141,8 @@ module.exports = {
               }
             },
             {
-              test: /\.(sa|sc|c)ss$/i,
-              use: ['style-loader', 'css-loader', 'sass-loader'],
+              test: /\.css$/i,
+              use: ['style-loader', 'css-loader'],
             },
         ]
     },
@@ -186,40 +186,59 @@ Our webpack has an entry, an output, some rules, a mode, and some plugins.
 
 The entry tells webpack where to start, what is the root of our application. Webpack supports multiple entries.
 
-The output will be our `dist` folder. Once webpack is completed the work, that's where the bundled js and everything will live.
+The output will be our `dist` folder. Once webpack has completed the work, that's where the bundled js and everything will live.
 
-The rules are a collection of *regex tests* against *file paths* as webpack goes about bundling our code. If the rule is true, then it executes our specified loader that we've attached. **Note:** while rules can return true, we can also exclude certain files. Our `node_modules` have already been transpiled and minified, so we do not need to run our transpiler on them a second time. We've excluded them from our babel-loader. Here we tell webpack to use the babel-loader with preset-env and preset-react. Preset-env allows you to use latest ES6 syntax. Preset-react allows you to use JSX syntax.
+The rules are a collection of *regex tests* against *file paths* as webpack goes about bundling our code. If the rule is true, then it executes our specified loader that we've attached. **Note:** while rules can return true, we can also exclude certain files. Our `node_modules` have already been transpiled and minified by their creator, so we do not need to run our transpiler on them a second time. We've excluded them from our babel-loader. Here we tell webpack to use the babel-loader with preset-env and preset-react. Preset-env allows you to use latest ES6 syntax. Preset-react allows you to use JSX syntax.
 
 Plugins are useful utilities. We've included one that generates the html page required to serve our bundled js file.
 
-## Support for Sass / Scss files
-https://github.com/webpack-contrib/sass-loader
+#### package.json scripts
+
+While we can write out the command to bundle and run our webpack-dev-server right in the terminal - seriously, what a pain. Let's write them once under "scripts" inside our package.json object and on the command line we'll simply type `yarn` followed by the alias.
+
+Here are some you can add there now:
+
+```
+"scripts": {
+  "start": "node_modules/.bin/http-server ./dist",
+  "start:dev": "node_modules/.bin/webpack-dev-server --config webpack.config.js --open --hot",
+  "dev": "node_modules/.bin/webpack --config webpack.config.js",
+  "build": "node_modules/.bin/webpack -p --config webpack.config.js",
+}
+```
+
+Now run `yarn start:dev` and we'll have our application automatically compiled and served by our webpack-dev-server. Hurray! You'll notice, if you haven't yet run the webpack command, there is no `dist` folder. That's because webpack-dev-server does everything in memory. To see the bundle, run `yarn dev`, then to serve that bundle using http-server run `yarn start`.
+
+### Sass-Loader
+Likely, we will be using less or sass/scss. We need to add a loader that will check the file extension and transpile into regular old css. `sass-loader` is the solution for me. [read more](https://github.com/webpack-contrib/sass-loader)
 ```
 yarn add -D sass-loader node-sass
 ```
 
-## SourceMap
-https://webpack.js.org/configuration/devtool/
-> Initially it is slow, but it provides fast rebuild speed and yields real files. Line numbers are correctly mapped since it gets mapped to the original code. It yields the best quality SourceMaps for development.
-In webpack.config.js add:
+
+### SourceMap
+When we're running our app and need to do some debugging of styling, it helps to know where in our css and scss files the style rules are from. Source Maps are what provide that in the browser and we can enable them in webpack by adding a `devtool` property inside our webpack.config.js. [read more](https://webpack.js.org/configuration/devtool/) about devtool and source maps.
 ```
+# webpack.config.js
+
 devtool: 'eval-source-map',
 ```
-Only working in Chrome. Not sure why FF not listing sourceMaps correctly.
+**NOTE:** I've only gotten the source maps to show up on Chrome. Not sure why FF not listing sourceMaps correctly.
 
-# File Loader vs URL Loader
+### Images
 ```
 yarn add -D file-loader url-loader
 ```
-## Url-Loader
-> will encode files to base64 and include them inline rather than having them loaded as separate files with another request.
-Ideal for very small files to decrease the number of requests made to the server fetching resources, but will increase your bundle size.
-Specify the limit in bytes it will try to url-load the image, if above this threshold, it will by default fallback to file-loader.
-[link](https://webpack.js.org/loaders/url-loader/)
-data:;base64,aW1wb3J0IFJlYWN0IGZ...
-## File-Loader
-> will copy files to the build folder and insert links to them where they are included.
-[link](https://github.com/webpack-contrib/file-loader)
+#### Url-Loader
+> will encode files to base64 and include them inline rather than having them loaded as separate files with another request. [read more](https://webpack.js.org/loaders/url-loader/)
+
+PRO: Ideal for very small files to decrease the number of requests made to the server fetching resources.
+CON: will increase your bundle size.
+
+For small files it totally makes sense. No need to make unnecessary requests to the server if you can just base64 inline the image instead. **NOTE:** Specify the limit in bytes to try and url-load the image, if above this threshold, it will by default fallback to file-loader.
+
+#### File-Loader
+> will copy files to the build folder and insert links to them where they are included. [read more](https://github.com/webpack-contrib/file-loader)
 
 ## webpack-merge
 yarn add -D webpack-merge
