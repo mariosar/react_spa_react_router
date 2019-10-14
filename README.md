@@ -550,5 +550,34 @@ app.get('*', (req, res) => {
 app.listen(port);
 ```
 
+## Deployment to Heroku
+Heroku is great! There is a free tier that allows you to test out deployment. Go ahead and [create](https://signup.heroku.com/) an account there.
+
+Follow these basic commands and they should be enough to have your app up and running in a production environment in the cloud:
+
+##### Add heroku-postbuild command to your 'scripts' inside package.json
+```
+# package.json
+{
+  ...
+  "scripts": {
+    ...
+    "heroku-postbuild": "node_modules/.bin/webpack --env.production -p --config webpack.prod.js --progress"
+  }
+}
+```
+##### Install Heroku CLI
+```
+curl https://cli-assets.heroku.com/install-ubuntu.sh | sh
+```
+##### Create Heroku application, commit your rcode to heroku
+```
+heroku login
+heroku create
+git add .
+git commit -m "Deployment of app"
+git push heroku master
+```
+
 ## Summary
 We've used webpack with several loaders and plugins. We've shown you how to write the webpack config file needed to inform webpack how to transpile and bundle. We've shown you how to use webpack environment variables for conditionals inside of webpack config files. We've discussed how to make a production build of our application. I hope you've enjoyed this basic tutorial and this code is useful to you. Thank you.
