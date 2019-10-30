@@ -34,20 +34,31 @@ const App = () => {
 	let history = useHistory();
 
 	useEffect(() => {
-		PubSub.subscribe('auth.signIn.success', function(){
+		Auth.validateToken()
+			.then(function (user) {
+				console.log(user)
+				setUser(user)
+				setSignedIn(user.signedIn ? true : false)
+			})
+			.fail(function (resp) {
+				console.log(resp)
+				console.log('failed')
+			});
+
+		PubSub.subscribe('auth.signIn.success', function () {
 			setUser(Auth.user)
 			setSignedIn(true)
 
-			history.replace({pathname: "/"})
-		});
+			history.replace({ pathname: "/" })
+		})
 
-		PubSub.subscribe('auth.signOut.success', function(ev, msg) {
-			history.replace({pathname: "/"})
+		PubSub.subscribe('auth.signOut.success', function (ev, msg) {
+			history.replace({ pathname: "/" })
 
 			setUser({})
 			setSignedIn(false)
 		});
-		
+
 		return () => {
 			PubSub.unsubscribe('auth.signIn.success')
 			PubSub.unsubscribe('auth.signOut.success')
@@ -168,21 +179,21 @@ function UserInfo() {
 }
 
 function PrivateRoute({ children, ...rest }) {
-  return (
-    <Route
-      {...rest}
-      render={({ location }) =>
-        Auth.user.signedIn ? (
-          children
-        ) : (
-          <Redirect
-            to={{
-              pathname: "/sign-in",
-              state: { from: location }
-            }}
-          />
-        )
-      }
-    />
-  );
+	return (
+		<Route
+			{...rest}
+			render={({ location }) =>
+				Auth.user.signedIn ? (
+					children
+				) : (
+						<Redirect
+							to={{
+								pathname: "/sign-in",
+								state: { from: location }
+							}}
+						/>
+					)
+			}
+		/>
+	);
 }

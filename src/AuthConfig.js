@@ -9,7 +9,10 @@ Auth.configure({
   accountDeletePath:     '/auth',
   passwordResetPath:     '/auth/password',
   passwordUpdatePath:    '/auth/password',
-  tokenValidationPath:   '/auth/validate_token',
+	tokenValidationPath:   '/auth/validate_token',
+	storage:							 'cookies',
+	cookieExpiry:          14,
+  cookiePath:            '/',
 })
 
 export default Auth
