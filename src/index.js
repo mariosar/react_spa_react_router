@@ -21,11 +21,33 @@ import SignOut from './components/SignOut';
 import PubSub from 'pubsub-js';
 import Auth from './AuthConfig';
 
-const Main = () => (
-	<Router>
-		<App />
-	</Router>
-)
+const Main = () => {
+	const [isLoading, setIsLoading] = useState(true)
+
+	useEffect(() => {
+		Auth.validateToken()
+			.then(function (user) {
+				console.log(user)
+				setIsLoading(false)	
+			})
+			.fail(function (resp) {
+				console.log(resp)
+				console.log('failed')
+				setIsLoading(false)
+			});
+	}, [])
+
+	return (
+		<Router>
+			{isLoading ? (
+				<span>Is Loading</span>
+			) : (
+					<App />
+				)}
+		</Router>
+	)
+}
+
 
 const App = () => {
 	const [user, setUser] = useState(Auth.user);
@@ -34,19 +56,8 @@ const App = () => {
 	let history = useHistory();
 
 	useEffect(() => {
-		Auth.validateToken()
-			.then(function (user) {
-				console.log(user)
-				setUser(user)
-				setSignedIn(user.signedIn ? true : false)
-			})
-			.fail(function (resp) {
-				console.log(resp)
-				console.log('failed')
-			});
-
 		PubSub.subscribe('auth.signIn.success', function () {
-			setUser(Auth.user)
+			setUser({ ...Auth.user })
 			setSignedIn(true)
 
 			history.replace({ pathname: "/" })
@@ -79,9 +90,6 @@ const App = () => {
 				<li>
 					<Link to="/about">About</Link>
 				</li>
-				<li>
-					<Link to="/users">Users</Link>
-				</li>
 				{signedIn ? (
 					<li>
 						<Link to="/sign-out">Sign Out</Link>
@@ -91,6 +99,7 @@ const App = () => {
 							<Link to="/sign-in">Sign In</Link>
 						</li>
 					)}
+				{signedIn && <li><Link to="/users">Users</Link></li>}
 				{!signedIn &&
 					<li>
 						<Link to="/sign-up">Sign Up</Link>
@@ -99,9 +108,6 @@ const App = () => {
 			</ul>
 
 			<Switch>
-				<Route path="/users">
-					<Users />
-				</Route>
 				<Route path="/about">
 					<About />
 				</Route>
@@ -113,6 +119,9 @@ const App = () => {
 				</Route>
 				<PrivateRoute path="/sign-out">
 					<SignOut />
+				</PrivateRoute>
+				<PrivateRoute path="/users">
+					<Users />
 				</PrivateRoute>
 				<Route path="/">
 					<Home />

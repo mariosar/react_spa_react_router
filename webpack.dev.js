@@ -5,6 +5,6 @@ module.exports = env => merge(common(env), {
   mode: 'development',
 	devtool: 'eval-source-map',
 	devServer: {
-    historyApiFallback: true
+		historyApiFallback: true
   }
 })
