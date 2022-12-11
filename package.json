@@ -15,7 +15,7 @@
   "author": "Mario Saraiva",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "j-toker": "^0.0.10-beta3",
     "react": "^16.10.2",
     "react-dom": "^16.10.2",
